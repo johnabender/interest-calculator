@@ -176,7 +176,7 @@ function gradientDescent(state, variableName, step) {
 	let lastErr = Infinity;
 	let cycleCount = 0;
 
-	while (Math.abs(err) > 1 && step > 0.01 && cycleCount < 1000) {
+	while (Math.abs(err) > 0.1 && step > 0.01 && cycleCount < 1000) {
 		cycleCount++;
 
 		let currentValue = computeEndingValueWithContribution(Object.assign({}, state, {

@@ -40,9 +40,14 @@ function InputValue({
 				justify="center"
 				alignItems="center"
 				spacing={2}
-				className={clsx(classes.inputItemRow)}
+				className={classes.inputItemRow}
 			>
-				<Grid item xs={4} className={clsx(classes.sliderItem)}>
+				<Grid
+					item
+					xs={12}
+					md={4}
+					className={clsx(classes.sliderItem)}
+				>
 					<Slider
 						min={sliderValues.min}
 						max={sliderValues.max}
@@ -55,7 +60,14 @@ function InputValue({
 						className={sliderValues.max > 0 ? classes.slider : classes.hidden}
 					/>
 				</Grid>
-				<Grid item xs={4} className={clsx(classes.textFieldItem)}>
+
+				<Grid
+					item
+					xs={6}
+					md={3}
+					lg={2}
+					className={clsx(classes.textFieldItem)}
+				>
 					<TextField
 						variant="outlined"
 						label={label}
@@ -69,13 +81,20 @@ function InputValue({
 						className={classes.textField}
 					/>
 				</Grid>
-				<Grid item xs={4} className={clsx(classes.textFieldItem)}>
+
+				<Grid
+					item
+					xs={6}
+					md={4}
+					className={classes.radioButtonItem}
+				>
 					<FormControlLabel
 						control={
 							<Radio
 								checked={checkboxChecked}
 								onChange={onCheckCheckbox}
 								color="primary"
+								className={classes.radioButton}
 							/>
 						}
 						label="Solve for"

@@ -6,27 +6,49 @@ export const useStyles = makeStyles(theme => ({
   },
 
   sliderItem: {
-    textAlign: "right",
     [theme.breakpoints.down('xs')]: {
       "margin-left": 0,
       "margin-right": 0,
+      "margin-bottom": "-8px",
+    },
+    [theme.breakpoints.up('md')]: {
+      textAlign: "right",
+    },
+    [theme.breakpoints.down('sm')]: {
+      textAlign: "center",
     },
   },
   slider: {
-    width: "10rem",
+    width: "75%",
     [theme.breakpoints.down('xs')]: {
       width: "100%",
     },
   },
 
   textFieldItem: {
-    textAlign: "left",
+    textAlign: "right",
+    [theme.breakpoints.up('md')]: {
+      textAlign: "left",
+    },
+    [theme.breakpoints.down('xs')]: {
+      "margin-bottom": "25px",
+    },
   },
   textField: {
-    width: "10rem",
+    width: "100%",
+    [theme.breakpoints.down('sm')]: {
+      width: "10rem",
+    },
     [theme.breakpoints.down('xs')]: {
       width: "9rem",
     },
+  },
+
+  radioButtonItem: {
+    textAlign: "left",
+  },
+  radioButton: {
+    padding: "5px",
   },
 
   hidden: {

@@ -16,20 +16,28 @@ export const useStyles = makeStyles(theme => ({
     },
   },
 
-  valueTotalItem: {
+  examplesItem: {
+    margin: theme.spacing(3),
   },
-  valueItem: {
-  	"margin-top": theme.spacing(5),
+  exampleItem: {
+    marginTop: theme.spacing(3),
   },
+
   copyrightItem: {
     "margin-top": theme.spacing(5),
     "text-align": "center",
-  },
 
-  hideLowerLeft: {
-    [theme.breakpoints.down('md')]: {
-      display: "none",
+/*
+    [theme.breakpoints.up('sm')]: {
+      background: "red",
     },
+    [theme.breakpoints.up('md')]: {
+      background: "blue",
+    },
+    [theme.breakpoints.up('lg')]: {
+      background: "green",
+    },
+    */
   },
 
   cyanBg: {

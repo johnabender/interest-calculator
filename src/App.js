@@ -3,6 +3,9 @@ import { connect } from 'react-redux';
 import {
   CssBaseline,
   Grid,
+  List,
+  ListItem,
+  ListItemText,
   Paper,
   Typography,
 } from '@material-ui/core';
@@ -30,7 +33,7 @@ function App(props) {
       <CssBaseline />
 
       <div className={classes.root}>
-        <Typography variant="h2" align="center">Interest Calculator</Typography>
+        <Typography component="h1" variant="h2" align="center">Interest Calculator</Typography>
         <Paper className={classes.paper}>
           <Grid
             container
@@ -43,7 +46,6 @@ function App(props) {
             <Grid
               item
               xs={12}
-              md={6}
               container
               direction="column"
               spacing={1}
@@ -53,6 +55,7 @@ function App(props) {
                 startAdornment="$"
                 value={props.startingValue}
                 valueFormat="0,0"
+                sliderValues={{min: 0, max: 1000000, step: 1000}}
                 onChange={props.onChangeStartingValue}
                 checkboxChecked={props.solveForStartingValue}
                 onCheckCheckbox={props.onSolveForStartingValue}
@@ -63,25 +66,17 @@ function App(props) {
                 startAdornment="$"
                 value={props.endingValue}
                 valueFormat="0,0"
+                sliderValues={{min: 0, max: 1000000, step: 2500}}
                 onChange={props.onChangeEndingValue}
                 checkboxChecked={props.solveForEndingValue}
                 onCheckCheckbox={props.onSolveForEndingValue}
               />
-            </Grid>
 
-            <Grid
-              item
-              xs={12}
-              md={6}
-              container
-              direction="column"
-              spacing={1}
-            >
               <InputValue
                 label="Interest rate"
                 endAdornment="%"
                 value={props.interestRate}
-                valueFormat="0.0"
+                valueFormat="0.00"
                 sliderValues={{min: 0, max: 10, step: 0.1}}
                 onChange={props.onChangeInterestRate}
                 checkboxChecked={props.solveForInterestRate}
@@ -93,7 +88,7 @@ function App(props) {
                 endAdornment="years"
                 value={props.numberOfYears}
                 valueFormat="0"
-                sliderValues={{min: 2, max: 30, step: 1}}
+                sliderValues={{min: 5, max: 30, step: 1}}
                 onChange={props.onChangeNumberOfYears}
                 checkboxChecked={props.solveForNumberOfYears}
                 onCheckCheckbox={props.onSolveForNumberOfYears}
@@ -103,11 +98,47 @@ function App(props) {
                 label="Monthly contribution"
                 startAdornment="$"
                 value={props.monthlyContribution}
-                valueFormat="0.0"
+                valueFormat="0,0"
                 onChange={props.onChangeMonthlyContribution}
                 checkboxChecked={props.solveForMonthlyContribution}
                 onCheckCheckbox={props.onSolveForMonthlyContribution}
               />
+            </Grid>
+
+            <Grid
+              item
+              xs={12}
+              container
+              direction="row"
+              className={classes.examplesItem}
+            >
+              <Grid item xs={12} align="center">
+                <Typography component="h2" variant="h4">
+                  Examples
+                </Typography>
+              </Grid>
+              <Grid item xs={12} md={6} className={classes.exampleItem}>
+                <Typography component="h3" variant="h6">
+                  Mortgage payment
+                </Typography>
+                <List dense={true}>
+                  <ListItem><ListItemText primary="Solve for monthly contribution." /></ListItem>
+                  <ListItem><ListItemText primary="Set ending value to zero." /></ListItem>
+                  <ListItem><ListItemText primary="Modify starting value, interest rate, and number of years." /></ListItem>
+                  <ListItem><ListItemText primary="See the monthly payment!" /></ListItem>
+                </List>
+              </Grid>
+              <Grid item xs={12} md={6} className={classes.exampleItem}>
+                <Typography component="h3" variant="h6">
+                  College savings
+                </Typography>
+                <List dense={true}>
+                  <ListItem><ListItemText primary="Solve for ending value." /></ListItem>
+                  <ListItem><ListItemText primary="Set starting value and number of years." /></ListItem>
+                  <ListItem><ListItemText primary="Modify ending value and interest rate." /></ListItem>
+                  <ListItem><ListItemText primary="See how much college you can afford for your child!" /></ListItem>
+                </List>
+              </Grid>
             </Grid>
 
             <Grid
