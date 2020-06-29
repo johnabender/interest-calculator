@@ -25,6 +25,9 @@ const INITIAL_STATE = {
 	solveForInterestRate: false,
 	solveForNumberOfYears: false,
 	solveForMonthlyContribution: false,
+
+	principalPaid: 0,
+	interestPaid: 0,
 };
 
 export function calculatorApp(currentState, action) {
@@ -112,44 +115,57 @@ export function calculatorApp(currentState, action) {
 
 function solve(state) {
 	if (state.solveForStartingValue) {
+		/*
 		if (state.monthlyContribution === 0) {
 			return Object.assign({}, state, {
 				startingValue: state.endingValue/(1 + state.interestRate/100)**state.numberOfYears,
 			});
 		}
 		else {
+			*/
 			return gradientDescent(state, 'startingValue', 1000);
-		}
+		// }
 	}
 	else if (state.solveForEndingValue) {
+		/*
 		if (state.monthlyContribution === 0) {
 			return Object.assign({}, state, {
 				endingValue: state.startingValue*(1 + state.interestRate/100)**state.numberOfYears,
 			});
 		}
 		else {
-			return Object.assign({}, state, {endingValue: computeEndingValueWithContribution(state)});
-		}
+			*/
+			let totals = computeEndingValueWithContribution(state);
+			return Object.assign({}, state, {
+				endingValue: totals.total,
+				paymentsPaid: totals.payments,
+				interestPaid: totals.interest,
+			});
+		// }
 	}
 	else if (state.solveForInterestRate) {
+		/*
 		if (state.monthlyContribution === 0) {
 			return Object.assign({}, state, {
 				interestRate: 100*((state.endingValue/state.startingValue)**(1/state.numberOfYears) - 1),
 			});
 		}
 		else {
+			*/
 			return gradientDescent(state, 'interestRate', 0.1);
-		}
+		// }
 	}
 	else if (state.solveForNumberOfYears) {
+		/*
 		if (state.monthlyContribution === 0) {
 			return Object.assign({}, state, {
 				numberOfYears: Math.log(state.endingValue/state.startingValue)/Math.log(1 + state.interestRate/100),
 			});
 		}
 		else {
+			*/
 			return gradientDescent(state, 'numberOfYears', 1);
-		}
+		// }
 	}
 	else if (state.solveForMonthlyContribution) {
 		return gradientDescent(state, 'monthlyContribution', 100);
@@ -161,17 +177,26 @@ function solve(state) {
 
 function computeEndingValueWithContribution(state) {
 	let total = state.startingValue;
+	let payments = 0;
+	let interest = 0;
 
 	for (let t = 0; t < 12*state.numberOfYears; t++) {
-		total += total*state.interestRate/100/12;
-		total += state.monthlyContribution;
+		let i = total*state.interestRate/100/12;
+		interest += i;
+		total += i;
+
+		let p = state.monthlyContribution;
+		payments += p;
+		total += p;
 	}
 
-	return total;
+	return {endingValue: total, payments, interest};
 }
 
 function gradientDescent(state, variableName, step) {
 	let val = state[variableName];
+	let payments = 0;
+	let interest = 0;
 	let err = Infinity;
 	let lastErr = Infinity;
 	let cycleCount = 0;
@@ -182,17 +207,35 @@ function gradientDescent(state, variableName, step) {
 		let currentValue = computeEndingValueWithContribution(Object.assign({}, state, {
 			[variableName]: val,
 		}));
-		// console.log(`cycle: ${cycleCount}, contrib: ${val}, computed: ${currentValue}`);
+		payments = currentValue.payments;
+		interest = currentValue.interest;
+		// console.log(`cycle: ${cycleCount}, estimate: ${val}, end value: ${currentValue.endingValue}`);
 
-		err = currentValue - state.endingValue;
-		if (err > 0) { val -= step; }
-		else { val += step; }
+		err = currentValue.endingValue - state.endingValue;
+		if (err > 0) {
+			if (variableName === 'numberOfYears') {
+				val += step;
+			}
+			else {
+				val -= step;
+			}
+		}
+		else {
+			if (variableName === 'numberOfYears') {
+				val -= step;
+			}
+			else {
+				val += step;
+			}
+		}
 		if (Math.abs(err) > Math.abs(lastErr)) { step /= 2; }
 		lastErr = err;
-		// console.log(`error: ${err}, new contrib: ${val}, next step will be ${step}`);
+		// console.log(`error: ${err}, new estimate: ${val}, next step will be ${step}`);
 	}
 
 	return Object.assign({}, state, {
 		[variableName]: val,
+		paymentsPaid: payments,
+		interestPaid: interest,
 	});
 }

@@ -16,6 +16,15 @@ export const useStyles = makeStyles(theme => ({
     },
   },
 
+  totalsItem: {
+    "margin-top": theme.spacing(3),
+    "text-align": "center",
+  },
+  totalsText: {
+    "font-style": "italic",
+    "margin-bottom": "8px",
+  },
+
   examplesItem: {
     margin: theme.spacing(3),
   },

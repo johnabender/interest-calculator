@@ -9,6 +9,7 @@ import {
   Paper,
   Typography,
 } from '@material-ui/core';
+import numeral from 'numeral';
 
 import { useStyles } from './App-styles.js';
 import InputValue from './InputValue.js';
@@ -76,7 +77,7 @@ function App(props) {
                 label="Interest rate"
                 endAdornment="%"
                 value={props.interestRate}
-                valueFormat="0.00"
+                valueFormat="0.000"
                 sliderValues={{min: 0, max: 10, step: 0.1}}
                 onChange={props.onChangeInterestRate}
                 checkboxChecked={props.solveForInterestRate}
@@ -87,7 +88,7 @@ function App(props) {
                 label="Number of years"
                 endAdornment="years"
                 value={props.numberOfYears}
-                valueFormat="0"
+                valueFormat="0.0"
                 sliderValues={{min: 5, max: 30, step: 1}}
                 onChange={props.onChangeNumberOfYears}
                 checkboxChecked={props.solveForNumberOfYears}
@@ -104,6 +105,27 @@ function App(props) {
                 onCheckCheckbox={props.onSolveForMonthlyContribution}
               />
             </Grid>
+
+{/*
+            <Grid
+              item
+              xs={12}
+              container
+              direction="row"
+              className={classes.totalsItem}
+            >
+              <Grid item xs={12} md={6}>
+                <Typography paragraph color="textSecondary" className={classes.totalsText}>
+                  Total interest: {numeral(props.interestPaid).format('$0,0')}
+                </Typography>
+              </Grid>
+              <Grid item xs={12} md={6}>
+                <Typography paragraph color="textSecondary" className={classes.totalsText}>
+                  Total payments: {numeral(props.paymentsPaid).format('$0,0')}
+                </Typography>
+              </Grid>
+            </Grid>
+            */}
 
             <Grid
               item
