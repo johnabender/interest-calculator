@@ -34,15 +34,6 @@ export const useStyles = makeStyles(theme => ({
       "margin-bottom": "25px",
     },
   },
-  textField: {
-    width: "100%",
-    [theme.breakpoints.down('sm')]: {
-      width: "10rem",
-    },
-    [theme.breakpoints.down('xs')]: {
-      width: "9rem",
-    },
-  },
 
   radioButtonItem: {
     textAlign: "left",

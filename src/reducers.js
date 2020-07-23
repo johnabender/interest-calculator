@@ -1,5 +1,3 @@
-import numeral from 'numeral';
-
 import {
 	SET_STARTING_VALUE,
 	SET_ENDING_VALUE,
@@ -11,6 +9,8 @@ import {
 	SET_SOLVE_FOR_INTEREST_RATE,
 	SET_SOLVE_FOR_NUMBER_OF_YEARS,
 	SET_SOLVE_FOR_MONTHLY_CONTRIBUTION,
+	SET_SELECTED_BOX,
+	SET_CURSOR_POSITION,
 } from './actions';
 
 const INITIAL_STATE = {
@@ -18,100 +18,95 @@ const INITIAL_STATE = {
 	endingValue: null,
 	interestRate: 5,
 	numberOfYears: 20,
-	monthlyContribution: 0,
+	monthlyContribution: 100,
+	principalPaid: 0,
+	interestPaid: 0,
 
 	solveForStartingValue: false,
 	solveForEndingValue: true,
 	solveForInterestRate: false,
 	solveForNumberOfYears: false,
 	solveForMonthlyContribution: false,
-
-	principalPaid: 0,
-	interestPaid: 0,
+	selectedBox: 'startingValue',
+	cursorPosition: 0,
 };
+
 
 export function calculatorApp(currentState, action) {
 	if (!currentState) {
-		let newState = INITIAL_STATE;
-		return solve(newState);
+		return solve(INITIAL_STATE);
 	}
 
-	let newState = null;
 	switch (action.type) {
 		case SET_STARTING_VALUE:
-			newState = Object.assign({}, currentState, {
-				startingValue: numeral(action.value).value(),
-			});
-			return solve(newState);
+			return solve(Object.assign({}, currentState, {
+				startingValue: action.value,
+			}));
 		case SET_ENDING_VALUE:
-			newState = Object.assign({}, currentState, {
-				endingValue: numeral(action.value).value(),
-			});
-			return solve(newState);
+			return solve(Object.assign({}, currentState, {
+				endingValue: action.value,
+			}));
 		case SET_INTEREST_RATE:
-			newState = Object.assign({}, currentState, {
-				interestRate: numeral(action.value).value(),
-			});
-			return solve(newState);
+			return solve(Object.assign({}, currentState, {
+				interestRate: action.value,
+			}));
 		case SET_NUMBER_OF_YEARS:
-			newState = Object.assign({}, currentState, {
-				numberOfYears: numeral(action.value).value(),
-			});
-			return solve(newState);
+			return solve(Object.assign({}, currentState, {
+				numberOfYears: action.value,
+			}));
 		case SET_MONTHLY_CONTRIBUTION:
-			newState = Object.assign({}, currentState, {
-				monthlyContribution: numeral(action.value).value(),
-			});
-			return solve(newState);
+			return solve(Object.assign({}, currentState, {
+				monthlyContribution: action.value,
+			}));
 		case SET_SOLVE_FOR_STARTING_VALUE:
-			newState = Object.assign({}, currentState, {
+			return solve(Object.assign({}, currentState, {
 				solveForStartingValue: true,
 				solveForEndingValue: false,
 				solveForInterestRate: false,
 				solveForNumberOfYears: false,
 				solveForMonthlyContribution: false,
-			});
-			return solve(newState);
+			}));
 		case SET_SOLVE_FOR_ENDING_VALUE:
-			newState = Object.assign({}, currentState, {
+			return solve(Object.assign({}, currentState, {
 				solveForStartingValue: false,
 				solveForEndingValue: true,
 				solveForInterestRate: false,
 				solveForNumberOfYears: false,
 				solveForMonthlyContribution: false,
-			});
-			return solve(newState);
+			}));
 		case SET_SOLVE_FOR_INTEREST_RATE:
-			newState = Object.assign({}, currentState, {
+			return solve(Object.assign({}, currentState, {
 				solveForStartingValue: false,
 				solveForEndingValue: false,
 				solveForInterestRate: true,
 				solveForNumberOfYears: false,
 				solveForMonthlyContribution: false,
-			});
-			return solve(newState);
+			}));
 		case SET_SOLVE_FOR_NUMBER_OF_YEARS:
-			newState = Object.assign({}, currentState, {
+			return solve(Object.assign({}, currentState, {
 				solveForStartingValue: false,
 				solveForEndingValue: false,
 				solveForInterestRate: false,
 				solveForNumberOfYears: true,
 				solveForMonthlyContribution: false,
-			});
-			return solve(newState);
+			}));
 		case SET_SOLVE_FOR_MONTHLY_CONTRIBUTION:
-			newState = Object.assign({}, currentState, {
+			return solve(Object.assign({}, currentState, {
 				solveForStartingValue: false,
 				solveForEndingValue: false,
 				solveForInterestRate: false,
 				solveForNumberOfYears: false,
 				solveForMonthlyContribution: true,
-			});
-			return solve(newState);
+			}));
+		case SET_SELECTED_BOX:
+			return Object.assign({}, currentState, {selectedBox: action.value});
+		case SET_CURSOR_POSITION:
+			return Object.assign({}, currentState, {cursorPosition: action.value});
 		default:
 			return currentState;
 	}
 }
+
 
 function solve(state) {
 	if (state.solveForStartingValue) {
@@ -135,12 +130,7 @@ function solve(state) {
 		}
 		else {
 			*/
-			let totals = computeEndingValueWithContribution(state);
-			return Object.assign({}, state, {
-				endingValue: totals.total,
-				paymentsPaid: totals.payments,
-				interestPaid: totals.interest,
-			});
+			return Object.assign({}, state, computeEndingValueWithContribution(state));
 		// }
 	}
 	else if (state.solveForInterestRate) {
@@ -171,27 +161,10 @@ function solve(state) {
 		return gradientDescent(state, 'monthlyContribution', 100);
 	}
 
-	console.warn('missed a state!? -this code shouldn\'t be reached');
+	console.warn('missed a case!? -this code shouldn\'t be reached!!');
 	return state;
 }
 
-function computeEndingValueWithContribution(state) {
-	let total = state.startingValue;
-	let payments = 0;
-	let interest = 0;
-
-	for (let t = 0; t < 12*state.numberOfYears; t++) {
-		let i = total*state.interestRate/100/12;
-		interest += i;
-		total += i;
-
-		let p = state.monthlyContribution;
-		payments += p;
-		total += p;
-	}
-
-	return {endingValue: total, payments, interest};
-}
 
 function gradientDescent(state, variableName, step) {
 	let val = state[variableName];
@@ -207,8 +180,8 @@ function gradientDescent(state, variableName, step) {
 		let currentValue = computeEndingValueWithContribution(Object.assign({}, state, {
 			[variableName]: val,
 		}));
-		payments = currentValue.payments;
-		interest = currentValue.interest;
+		payments = currentValue.paymentsPaid;
+		interest = currentValue.interestPaid;
 		// console.log(`cycle: ${cycleCount}, estimate: ${val}, end value: ${currentValue.endingValue}`);
 
 		err = currentValue.endingValue - state.endingValue;
@@ -238,4 +211,27 @@ function gradientDescent(state, variableName, step) {
 		paymentsPaid: payments,
 		interestPaid: interest,
 	});
+}
+
+
+function computeEndingValueWithContribution(state) {
+	let total = state.startingValue;
+	let payments = 0;
+	let interest = 0;
+
+	for (let t = 0; t < 12*state.numberOfYears; t++) {
+		let i = total*state.interestRate/100/12;
+		interest += i;
+		total += i;
+
+		let p = state.monthlyContribution;
+		payments += p;
+		total += p;
+	}
+
+	return {
+		endingValue: total,
+		paymentsPaid: payments,
+		interestPaid: interest,
+	};
 }

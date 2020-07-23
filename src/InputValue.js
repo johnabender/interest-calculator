@@ -8,9 +8,10 @@ import {
 	InputAdornment,
 	Radio,
 	Slider,
-	TextField,
 } from '@material-ui/core';
+
 import { useStyles } from './InputValue-styles.js';
+import FormattedTextField from './FormattedTextField.js';
 
 function InputValue({
 		label,
@@ -19,10 +20,13 @@ function InputValue({
 		value,
 		valueFormat,
 		onChange=function(){},
+		selected=false,
+		cursorPosition=-1,
 		sliderValues={min: 0, max: 0, step: 1},
 		checkboxChecked=false,
 		onCheckCheckbox=function(){},
-		}) {
+		...props
+	}) {
 	const classes = useStyles();
 
 	return (
@@ -68,11 +72,13 @@ function InputValue({
 					lg={2}
 					className={clsx(classes.textFieldItem)}
 				>
-					<TextField
-						variant="outlined"
+					<FormattedTextField
 						label={label}
-						value={numeral(value).format(valueFormat)}
+						value={value}
+						valueFormat={valueFormat}
 						disabled={checkboxChecked}
+						autoFocus={selected}
+						cursorPosition={cursorPosition}
 						onChange={onChange}
 						InputProps={{
 							startAdornment: <InputAdornment position="start">{startAdornment}</InputAdornment>,

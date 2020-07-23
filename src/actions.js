@@ -69,3 +69,12 @@ export function setSolveForMonthlyContribution() {
 		value: true,
 	};
 }
+
+export const SET_SELECTED_BOX = 'SET_SELECTED_BOX';
+export function setSelectedBox(value) {
+	return { type: SET_SELECTED_BOX, value };
+}
+export const SET_CURSOR_POSITION = 'SET_CURSOR_POSITION';
+export function setCursorPosition(value) {
+	return { type: SET_CURSOR_POSITION, value };
+}

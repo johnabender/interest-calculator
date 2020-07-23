@@ -24,6 +24,7 @@ import {
   setSolveForInterestRate,
   setSolveForNumberOfYears,
   setSolveForMonthlyContribution,
+  setSelectedBox,
 } from './actions';
 
 function App(props) {
@@ -56,6 +57,8 @@ function App(props) {
                 startAdornment="$"
                 value={props.startingValue}
                 valueFormat="0,0"
+                selected={props.selectedBox === 'startingValue'}
+                cursorPosition={props.cursorPosition}
                 sliderValues={{min: 0, max: 1000000, step: 1000}}
                 onChange={props.onChangeStartingValue}
                 checkboxChecked={props.solveForStartingValue}
@@ -67,6 +70,8 @@ function App(props) {
                 startAdornment="$"
                 value={props.endingValue}
                 valueFormat="0,0"
+                selected={props.selectedBox === 'endingValue'}
+                cursorPosition={props.cursorPosition}
                 sliderValues={{min: 0, max: 1000000, step: 2500}}
                 onChange={props.onChangeEndingValue}
                 checkboxChecked={props.solveForEndingValue}
@@ -78,6 +83,8 @@ function App(props) {
                 endAdornment="%"
                 value={props.interestRate}
                 valueFormat="0.000"
+                selected={props.selectedBox === 'interestRate'}
+                cursorPosition={props.cursorPosition}
                 sliderValues={{min: 0, max: 10, step: 0.1}}
                 onChange={props.onChangeInterestRate}
                 checkboxChecked={props.solveForInterestRate}
@@ -89,6 +96,8 @@ function App(props) {
                 endAdornment="years"
                 value={props.numberOfYears}
                 valueFormat="0.0"
+                selected={props.selectedBox === 'numberOfYears'}
+                cursorPosition={props.cursorPosition}
                 sliderValues={{min: 5, max: 30, step: 1}}
                 onChange={props.onChangeNumberOfYears}
                 checkboxChecked={props.solveForNumberOfYears}
@@ -100,13 +109,14 @@ function App(props) {
                 startAdornment="$"
                 value={props.monthlyContribution}
                 valueFormat="0,0"
+                selected={props.selectedBox === 'monthlyContribution'}
+                cursorPosition={props.cursorPosition}
                 onChange={props.onChangeMonthlyContribution}
                 checkboxChecked={props.solveForMonthlyContribution}
                 onCheckCheckbox={props.onSolveForMonthlyContribution}
               />
             </Grid>
 
-{/*
             <Grid
               item
               xs={12}
@@ -125,7 +135,6 @@ function App(props) {
                 </Typography>
               </Grid>
             </Grid>
-            */}
 
             <Grid
               item
@@ -193,18 +202,23 @@ function mapDispatchToProps(dispatch) {
 
   return {
     onChangeStartingValue: (event, value) => {
+      dispatch(setSelectedBox('startingValue'));
       dispatch(setStartingValue(getValue(event, value)));
     },
     onChangeEndingValue: (event, value) => {
+      dispatch(setSelectedBox('endingValue'));
       dispatch(setEndingValue(getValue(event, value)));
     },
     onChangeInterestRate: (event, value) => {
+      dispatch(setSelectedBox('interestRate'));
       dispatch(setInterestRate(getValue(event, value)));
     },
     onChangeNumberOfYears: (event, value) => {
+      dispatch(setSelectedBox('numberOfYears'));
       dispatch(setNumberOfYears(getValue(event, value)));
     },
     onChangeMonthlyContribution: (event, value) => {
+      dispatch(setSelectedBox('monthlyContribution'));
       dispatch(setMonthlyContribution(getValue(event, value)));
     },
 
